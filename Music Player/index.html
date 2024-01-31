@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #musicPlayer {
+      width: 300px;
+      text-align: center;
+    }
+
+    #albumCover {
+      width: 100%;
+      max-width: 250px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="musicPlayer">
+  <img src="album_cover.jpg" alt="Album Cover" id="albumCover">
+  <p id="songInfo">Song Title - Artist</p>
+  <audio id="audioPlayer">
+    <source src="song.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+  <button onclick="playPause()">Play/Pause</button>
+  <button onclick="stop()">Stop</button>
+  <button onclick="nextSong()">Next Song</button>
+  <button onclick="prevSong()">Previous Song</button>
+  <input type="range" id="volume" value="100" oninput="setVolume()">
+</div>
+
+<script>
+  const audioPlayer = document.getElementById('audioPlayer');
+  const songInfo = document.getElementById('songInfo');
+  const albumCover = document.getElementById('albumCover');
+  const volumeControl = document.getElementById('volume');
+
+  const playlist = [
+    { title: 'Song 1', artist: 'Artist 1', albumCover: 'album1.jpg', source: 'song1.mp3' },
+    { title: 'Song 2', artist: 'Artist 2', albumCover: 'album2.jpg', source: 'song2.mp3' },
+    // Add more songs to the playlist
+  ];
+
+  let currentSongIndex = 0;
+
+  function loadSong() {
+    const currentSong = playlist[currentSongIndex];
+    songInfo.textContent = `${currentSong.title} - ${currentSong.artist}`;
+    albumCover.src = currentSong.albumCover;
+    audioPlayer.src = currentSong.source;
+  }
+
+  function playPause() {
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+    } else {
+      audioPlayer.pause();
+    }
+  }
+
+  function stop() {
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+  }
+
+  function nextSong() {
+    currentSongIndex = (currentSongIndex + 1) % playlist.length;
+    loadSong();
+    audioPlayer.play();
+  }
+
+  function prevSong() {
+    currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+    loadSong();
+    audioPlayer.play();
+  }
+
+  function setVolume() {
+    audioPlayer.volume = volumeControl.value / 100;
+  }
+
+  audioPlayer.addEventListener('ended', nextSong);
+
+  loadSong(); 
+</script>
+
+</body>
+</html>
